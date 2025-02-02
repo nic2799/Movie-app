@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    
+    background-color: #f4f4f9;
+   
+        font-family: 'Roboto', sans-serif;
+
+      
+    text-align: center;
+  }
+  
+  #movieSearch {
+    padding: 10px;
+    margin: 20px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .movie {
+    background-color: white;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .movie h2 {
+    margin: 0;
+  }
+  
+  .movie button {
+    background-color: #ffa500;
+  }
+/* Aggiungi questa classe per il font specifico */
+.special-font {
+    font-family: 'Courier New', Courier, monospace; /* Sostituisci con il font desiderato */
+    font-size: 20px; /* Puoi anche aggiungere altre proprietà di stile */
+}
+
+/* Stile per i film votati */
+.rated-movie {
+    margin-bottom: 20px;
+}
+
+/* Stile per le stelle */
+.fa-star {
+    color: gold;
+    margin-right: 5px;
+}
