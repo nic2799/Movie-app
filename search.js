@@ -1,11 +1,14 @@
 import { addMovieToDatabase, getMoviesFromDatabase ,deleteMovieFromDatabase} from './firebase.js';
 
 export async function searchMovies() {
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const query = document.getElementById('movieSearch').value;
     const apiKey = '206b632d';
-    const url = `http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`;
+    const url = `https://www.omdbapi.com/?s=${query}&apikey=${apiKey}`;
+    console.log("Query:", query);
     try {
-        const response = await fetch(url);
+        
+        const response = await fetch(`https://www.omdbapi.com/?s=${query}&apikey=${apiKey}`);
         const data = await response.json();
         if (data.Response === "True") {
             displayMovies(data.Search);
