@@ -4,12 +4,13 @@ export async function searchMovies() {
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const query = document.getElementById('movieSearch').value;
     const apiKey = '206b632d';
-    const url = `https://www.omdbapi.com/?s=${query}&apikey=${apiKey}`;
+    const url = `https://www.omdbapi.com/?t=${query}&apikey=${apiKey}`;
     console.log("Query:", query);
     try {
         
         const response = await fetch(`https://www.omdbapi.com/?s=${query}&apikey=${apiKey}`);
         const data = await response.json();
+        console.log("Dati ricevuti dall'API:", data);
         if (data.Response === "True") {
             displayMovies(data.Search);
         } else {
@@ -27,34 +28,49 @@ function displayMovies(movies) {
         const movieDiv = document.createElement('div');
         movieDiv.classList.add('movie');
         movieDiv.innerHTML = `
+        <div class="movie-container">
             <img src="${movie.Poster}" alt="Poster di ${movie.Title}" />
             <h2>${movie.Title}</h2>
             <p>${movie.Year}</p>
-            <button onclick="rateMovie('${movie.Title}', '${movie.Poster}', '${movie.Year}')">Vota questo film</button>
+            <p>Rating IMDB: ${movie.imdbRating}</p>
+            <label for="rating-${movie.imdbID}">Voto (0-10):</label>
+            <input type="number" id="rating-${movie.imdbID}" name="rating" min="0" max="10" required>
+            <br>
+            <label for="comment-${movie.imdbID}" class="comment-label">Commento:</label>
+            <textarea id="comment-${movie.imdbID}" name="comment" class="comment-textarea" required></textarea>
+            <br>
+            <button onclick="rateMovie('${movie.Title}', '${movie.Poster}', '${movie.Year}', 'rating-${movie.imdbID}', 'comment-${movie.imdbID}')">Vota questo film</button>
+        </div>
         `;
+      
         moviesDiv.appendChild(movieDiv);
     });
 }
 
-function rateMovie(title, poster, year) {
-    let rating = prompt("Dai un voto da 0 a 10:");
-    if (rating >= 0 && rating <= 10) {
-        alert(`Hai dato ${rating} stelle al film: ${title}`);
-        addRatedMovie(title, poster, year, rating);
-    } else {
-        alert("Inserisci un voto valido tra 0 e 10.");
+function rateMovie(title, poster, year, ratingId, commentId) {
+    const rating = document.getElementById(ratingId).value;
+    const comment = document.getElementById(commentId).value;
+
+    if (rating === "" || comment.trim() === "") {
+        alert("Inserisci un voto e un commento prima di inviare.");
+        return;
     }
+
+    console.log(`Title: ${title}, Poster: ${poster}, Year: ${year}, Rating: ${rating}, Comment: ${comment}`);
+    addRatedMovie(title, poster, year, rating, comment);
 }
 
-async function addRatedMovie(title,poster,year,rating) {
+async function addRatedMovie(title,poster,year,rating,comment) {
     const movie = {
       title,
       poster,
       year,
-      rating
+      rating,
+      comment
     };
-  
-    await addMovieToDatabase(title,poster,year,rating);
+    console.log('Movie to add:', movie);
+
+    await addMovieToDatabase(title,poster,year,rating,comment);
     location.reload(); // Ricarica la lista dei film dopo l'aggiunta
   }
 
@@ -98,6 +114,7 @@ function displayRatedMovies(movies) {
             <h2>${movie.title}</h2>
             <p>${movie.year}</p>
             <p>Voto: ${getStars(movie.rating)}</p>
+            <p>Commento: ${movie.comment}</p>
             <button onclick="deleteMovie('${movie.id}')">Elimina</button>
         `;
         ratedMoviesDiv.appendChild(movieDiv);

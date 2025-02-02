@@ -14,13 +14,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export async function addMovieToDatabase(title,poster,year,rating) {
+export async function addMovieToDatabase(title,poster,year,rating,comment) {
     try {
         const docRef = await addDoc(collection(db, "ratedMovies"), {
             title: title,
             poster: poster,
             year: year,
-            rating: rating
+            rating: rating,
+            comment: comment
             
         });
         console.log("Document written with ID: ", docRef.id);
